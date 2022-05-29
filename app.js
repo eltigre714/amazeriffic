@@ -1,10 +1,10 @@
-var main = function (toDoObjects) {
-    "use strict";
-    var toDos = toDoObjects.map(function (toDo) {
-        // we'll just return the description
-        // of this toDoObject
-        return toDo.description;
-    });
+var main = function () {
+    var toDos = ["Get groceries",
+                 "Make up some new ToDos",
+                 "Prep for Monday's class",
+                 "Answer emails",
+                 "Take Gracie to the park",
+                 "Finish writing this book"];
 
     $(".tabs a span").toArray().forEach(function (element) {
         var $element = $(element);
@@ -34,69 +34,20 @@ var main = function (toDoObjects) {
                     $content.append($("<li>").text(todo));
                 });
             } else if ($element.parent().is(":nth-child(3)")) {
-                var tags = [];
-                
-                toDoObjects.forEach(function (toDo) {
-                    toDo.tags.forEach(function (tag) {
-                        if (tags.indexOf(tag) == -1) {
-                            tags.push(tag);
-                        }
-                    });
-                });
-                console.log(tags);
+                // input a new to-do
+                $input = $("<input>"),
+                $button = $("<button>").text("+");
 
-                var tagObjects = tag.map(function (tag) {
-                    var toDoWithTag = [];
-
-                    toDoObjects.forEach(function (toDo) {
-                        if (toDo.tags.indexOf(tag) !== -1) {
-                            toDoWithTag.push(toDo.description);
-                        }
-                    });
-                    return { "name":tag, "toDos": toDosWithTag };
+                $button.on("click", function () {
+                    if ($input.val() !== "") {
+                        toDos.push($input.val());
+                        $input.val("");
+                    }
                 });
 
-                tagObjects.forEach(function (tag) {
-                    var $tagName = $("<h3>").text(tag.name),
-                    $content = $("<ul>");
-
-                    tag.toDos.forEach(function (description) {
-                        var $li = $("<li>").text(description);
-                        $content.append($li);
-                    });
-
-                    $("main .content").append($tagName);
-                    $("main .content").append($content);
-                });
-
-
-                } else if ($element.parent().is(":nth-child(4)")) {
-                    var $input = $("<input>").addClass("description"),
-                        $inputLabel = $("<p>").text("Description: "),
-                        $tagInput = $("<input>").addClass("tags"),
-                        $tagLabel = $("<p>").text("Tags: "),
-                        $button = $("<button>").text("+");
-    
-                    $button.on("click", function () {
-                        var description = $input.val(),
-                            tags = $tagInput.val().split(",");
-
-                            toDoObjects.push({"description":description, "tags":tags});
-
-                    // update toDos
-                    toDos = toDoObjects.map(function (toDo) {
-                        return toDo.description;
-                    });
-
-                    $input.val("");
-                    $tagInput.val("");
-                });
-
-                $content = $("<div>").append($inputLabel)
-                                     .append($input)
-                                     .append($tagLabel)
-                                     .append($tagInput)
-                                     .append($button);
+                $content = $("<div>").append($input).append($button);
+               /* Alternatively append() allows multiple arguments so the above
+                can be done with $content = $("<div>").append($input, $button); */
             }
 
             $("main .content").append($content);
@@ -110,13 +61,7 @@ var main = function (toDoObjects) {
 
 $(document).ready(function () {
     $.getJSON("todos.json", function (toDoObjects) {
+        // call main with the to-dos as an argument
         main(toDoObjects);
     });
 });
-
-
-
-             
-            
-
-            
